@@ -226,12 +226,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuFilePanel3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if ("Bolacha".equals(txtCard3Field1.getText())) {
-            txtCard3Field1.setText("Biscoito");
+        if ("Bolacha".equals(card41.getTextField().getText())) {
+            card41.getTextField().setText("Biscoito");
         } else {
-            txtCard3Field1.setText("Bolacha");
+            card41.getTextField().setText("Bolacha");
         }
-        openCard("card3");
+        openCard("card5");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void mnuFilePanel4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel4ActionPerformed

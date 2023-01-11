@@ -4,6 +4,8 @@
  */
 package View;
 
+import javax.swing.JTextField;
+
 /**
  *
  * @author andre.ataide
@@ -15,6 +17,8 @@ public class card4 extends javax.swing.JPanel {
      */
     public card4() {
         initComponents();
+        
+        txtCard4Field1.setText("Recheio");
     }
 
     /**
@@ -52,4 +56,9 @@ public class card4 extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField txtCard4Field1;
     // End of variables declaration//GEN-END:variables
+
+    public JTextField getTextField() {
+        return txtCard4Field1;
+    }
+
 }
