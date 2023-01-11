@@ -18,6 +18,7 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
+        txtCard3Field1.setText("biscoito");
     }
 
     /**
@@ -35,12 +36,14 @@ public class Main extends javax.swing.JFrame {
         cardPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         cardPanel3 = new javax.swing.JPanel();
-        jSlider1 = new javax.swing.JSlider();
+        txtCard3Field1 = new javax.swing.JTextField();
+        card41 = new View.card4();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuFilePanel1 = new javax.swing.JMenuItem();
         mnuFilePanel2 = new javax.swing.JMenuItem();
         mnuFilePanel3 = new javax.swing.JMenuItem();
+        mnuFilePanel4 = new javax.swing.JMenuItem();
         mnuEdit = new javax.swing.JMenu();
         mnuEditFind = new javax.swing.JMenuItem();
         mnuEditReplace = new javax.swing.JMenuItem();
@@ -79,6 +82,11 @@ public class Main extends javax.swing.JFrame {
         cardPanel2.setBackground(new java.awt.Color(0, 255, 51));
 
         jButton1.setText("Clique-me");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout cardPanel2Layout = new javax.swing.GroupLayout(cardPanel2);
         cardPanel2.setLayout(cardPanel2Layout);
@@ -106,19 +114,20 @@ public class Main extends javax.swing.JFrame {
         cardPanel3Layout.setHorizontalGroup(
             cardPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanel3Layout.createSequentialGroup()
-                .addContainerGap(119, Short.MAX_VALUE)
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(105, 105, 105))
+                .addContainerGap(116, Short.MAX_VALUE)
+                .addComponent(txtCard3Field1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(104, 104, 104))
         );
         cardPanel3Layout.setVerticalGroup(
             cardPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardPanel3Layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGap(112, 112, 112)
+                .addComponent(txtCard3Field1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         pnlMainCards.add(cardPanel3, "card3");
+        pnlMainCards.add(card41, "card5");
 
         mnuFile.setText("Arquivo");
 
@@ -145,6 +154,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
         mnuFile.add(mnuFilePanel3);
+
+        mnuFilePanel4.setText("Abre Painel 4");
+        mnuFilePanel4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFilePanel4ActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFilePanel4);
 
         jMenuBar1.add(mnuFile);
 
@@ -208,6 +225,19 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnuFilePanel3ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if ("Bolacha".equals(txtCard3Field1.getText())) {
+            txtCard3Field1.setText("Biscoito");
+        } else {
+            txtCard3Field1.setText("Bolacha");
+        }
+        openCard("card3");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void mnuFilePanel4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel4ActionPerformed
+        openCard("card5");
+    }//GEN-LAST:event_mnuFilePanel4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -244,13 +274,13 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private View.card4 card41;
     private javax.swing.JPanel cardPanel1;
     private javax.swing.JPanel cardPanel2;
     private javax.swing.JPanel cardPanel3;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JSlider jSlider1;
     private javax.swing.JMenu mnuEdit;
     private javax.swing.JMenuItem mnuEditFind;
     private javax.swing.JMenuItem mnuEditReplace;
@@ -258,11 +288,13 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuFilePanel1;
     private javax.swing.JMenuItem mnuFilePanel2;
     private javax.swing.JMenuItem mnuFilePanel3;
+    private javax.swing.JMenuItem mnuFilePanel4;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpSite;
     private javax.swing.JMenuItem mnuHelpSupport;
     private javax.swing.JMenuItem mnuHelpUpdates;
     private javax.swing.JPanel pnlMainCards;
+    private javax.swing.JTextField txtCard3Field1;
     // End of variables declaration//GEN-END:variables
 
     // Abre um card 
