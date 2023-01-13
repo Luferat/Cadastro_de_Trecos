@@ -5,7 +5,10 @@
 package View;
 
 import java.awt.CardLayout;
+import java.awt.Toolkit;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 /**
  *
@@ -18,6 +21,13 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
+
+        // Altera o ícone do jFrame
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../images/box_flat.png")));
+
+        for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            System.out.println(info.getClassName());
+        }
     }
 
     /**
@@ -30,8 +40,12 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         pnlMainCards = new javax.swing.JPanel();
-        cardPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        panelReadAll = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         cardPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         cardPanel3 = new javax.swing.JPanel();
@@ -50,31 +64,85 @@ public class Main extends javax.swing.JFrame {
         mnuHelpSite = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cadatro de Trecos");
+        setPreferredSize(new java.awt.Dimension(640, 480));
 
         pnlMainCards.setLayout(new java.awt.CardLayout());
 
-        cardPanel1.setBackground(new java.awt.Color(255, 0, 0));
+        jButton2.setText("Novo");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Card 1");
+        jButton3.setText("Visualizar Selecionado");
 
-        javax.swing.GroupLayout cardPanel1Layout = new javax.swing.GroupLayout(cardPanel1);
-        cardPanel1.setLayout(cardPanel1Layout);
-        cardPanel1Layout.setHorizontalGroup(
-            cardPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardPanel1Layout.createSequentialGroup()
-                .addGap(192, 192, 192)
-                .addComponent(jLabel1)
-                .addContainerGap(198, Short.MAX_VALUE))
+        jButton4.setText("Editar Selecionado");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jTable2.setFont(jTable2.getFont().deriveFont(jTable2.getFont().getSize()+3f));
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "Data", "Nome", "Descrição"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable2.setColumnSelectionAllowed(true);
+        jScrollPane2.setViewportView(jTable2);
+        jTable2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(0).setResizable(false);
+            jTable2.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        javax.swing.GroupLayout panelReadAllLayout = new javax.swing.GroupLayout(panelReadAll);
+        panelReadAll.setLayout(panelReadAllLayout);
+        panelReadAllLayout.setHorizontalGroup(
+            panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelReadAllLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+                    .addGroup(panelReadAllLayout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4)))
+                .addContainerGap())
         );
-        cardPanel1Layout.setVerticalGroup(
-            cardPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardPanel1Layout.createSequentialGroup()
-                .addGap(125, 125, 125)
-                .addComponent(jLabel1)
-                .addContainerGap(127, Short.MAX_VALUE))
+        panelReadAllLayout.setVerticalGroup(
+            panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelReadAllLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        pnlMainCards.add(cardPanel1, "card1");
+        pnlMainCards.add(panelReadAll, "card1");
 
         cardPanel2.setBackground(new java.awt.Color(0, 255, 51));
 
@@ -87,14 +155,14 @@ public class Main extends javax.swing.JFrame {
             .addGroup(cardPanel2Layout.createSequentialGroup()
                 .addGap(170, 170, 170)
                 .addComponent(jButton1)
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(380, Short.MAX_VALUE))
         );
         cardPanel2Layout.setVerticalGroup(
             cardPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardPanel2Layout.createSequentialGroup()
                 .addGap(122, 122, 122)
                 .addComponent(jButton1)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlMainCards.add(cardPanel2, "card2");
@@ -106,7 +174,7 @@ public class Main extends javax.swing.JFrame {
         cardPanel3Layout.setHorizontalGroup(
             cardPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanel3Layout.createSequentialGroup()
-                .addContainerGap(119, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(105, 105, 105))
         );
@@ -115,7 +183,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(cardPanel3Layout.createSequentialGroup()
                 .addGap(104, 104, 104)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         pnlMainCards.add(cardPanel3, "card3");
@@ -184,7 +252,8 @@ public class Main extends javax.swing.JFrame {
             .addComponent(pnlMainCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pack();
+        setSize(new java.awt.Dimension(650, 407));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void mnuFilePanel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel1ActionPerformed
@@ -208,10 +277,19 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnuFilePanel3ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -224,33 +302,30 @@ public class Main extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Main().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel cardPanel1;
     private javax.swing.JPanel cardPanel2;
     private javax.swing.JPanel cardPanel3;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSlider jSlider1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JMenu mnuEdit;
     private javax.swing.JMenuItem mnuEditFind;
     private javax.swing.JMenuItem mnuEditReplace;
@@ -262,6 +337,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuHelpSite;
     private javax.swing.JMenuItem mnuHelpSupport;
     private javax.swing.JMenuItem mnuHelpUpdates;
+    private javax.swing.JPanel panelReadAll;
     private javax.swing.JPanel pnlMainCards;
     // End of variables declaration//GEN-END:variables
 
