@@ -7,6 +7,9 @@ package View;
 import java.awt.CardLayout;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -18,10 +21,33 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     public Main() {
+        // Inicializa componentes da interface gráfica
         initComponents();
 
         // Altera o ícone do jFrame
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../images/box_flat.png")));
+
+        /*
+         * As linhas abaixo marcadas com o comentário "Estética → ", alteram um pouco a estética da tabela.
+         * Elas não interferem, além do visual, no funcionamento do aplicativo.
+         */
+        // Estética → Centraliza conteúdo das células de cabeçalho
+        JTableHeader header = tableListAll.getTableHeader();
+        DefaultTableCellRenderer tableHeader = (DefaultTableCellRenderer) header.getDefaultRenderer();
+        tableHeader.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Estética → Centraliza verticalmente o conteúdo das células
+        DefaultTableCellRenderer tableCell = new DefaultTableCellRenderer();
+        tableCell.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Estética → Centraliza os conteúdos das células da coluna[0] Id
+        tableListAll.getColumnModel().getColumn(0).setCellRenderer(tableCell);
+
+        // Estética → Centraliza os conteúdos das células da coluna[1] Data
+        tableListAll.getColumnModel().getColumn(1).setCellRenderer(tableCell);
+
+        // Estética → Centraliza os conteúdos das células da coluna[3] Status
+        tableListAll.getColumnModel().getColumn(3).setCellRenderer(tableCell);
     }
 
     /**
@@ -93,17 +119,14 @@ public class Main extends javax.swing.JFrame {
         tableListAll.setFont(tableListAll.getFont().deriveFont(tableListAll.getFont().getSize()+3f));
         tableListAll.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "ID", "Data", "Nome", "Descrição"
+                "ID", "Data", "Nome", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -111,11 +134,16 @@ public class Main extends javax.swing.JFrame {
             }
         });
         tableListAll.setColumnSelectionAllowed(true);
+        tableListAll.setMinimumSize(new java.awt.Dimension(100, 100));
         jScrollPane2.setViewportView(tableListAll);
         tableListAll.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (tableListAll.getColumnModel().getColumnCount() > 0) {
-            tableListAll.getColumnModel().getColumn(0).setResizable(false);
-            tableListAll.getColumnModel().getColumn(2).setResizable(false);
+            tableListAll.getColumnModel().getColumn(0).setMinWidth(30);
+            tableListAll.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tableListAll.getColumnModel().getColumn(0).setMaxWidth(100);
+            tableListAll.getColumnModel().getColumn(2).setMinWidth(50);
+            tableListAll.getColumnModel().getColumn(2).setPreferredWidth(350);
+            tableListAll.getColumnModel().getColumn(2).setMaxWidth(600);
         }
 
         javax.swing.GroupLayout panelReadAllLayout = new javax.swing.GroupLayout(panelReadAll);
@@ -125,13 +153,13 @@ public class Main extends javax.swing.JFrame {
             .addGroup(panelReadAllLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
                     .addGroup(panelReadAllLayout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
+                        .addComponent(jButton4)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4)))
+                        .addComponent(jButton3))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelReadAllLayout.setVerticalGroup(
@@ -143,7 +171,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -177,7 +205,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelForm1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(panelForm1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -251,7 +279,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel7)))
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
 
         pnlMainCards.add(panelRead, "card3");
@@ -320,7 +348,7 @@ public class Main extends javax.swing.JFrame {
             .addComponent(pnlMainCards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(650, 407));
+        setSize(new java.awt.Dimension(650, 448));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
