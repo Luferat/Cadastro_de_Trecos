@@ -146,6 +146,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        tableListAll.setAutoCreateRowSorter(true);
         tableListAll.setFont(tableListAll.getFont().deriveFont(tableListAll.getFont().getSize()+3f));
         tableListAll.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -165,6 +166,8 @@ public class Main extends javax.swing.JFrame {
         });
         tableListAll.setColumnSelectionAllowed(true);
         tableListAll.setMinimumSize(new java.awt.Dimension(100, 100));
+        tableListAll.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableListAll.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(tableListAll);
         tableListAll.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (tableListAll.getColumnModel().getColumnCount() > 0) {
@@ -404,7 +407,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuFilePanel3ActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        // TODO add your handling code here:
+        loadSelected("edit");
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
@@ -412,7 +415,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
-        // TODO add your handling code here:
+        loadSelected("view");
     }//GEN-LAST:event_btnViewActionPerformed
 
     /**
@@ -518,7 +521,7 @@ public class Main extends javax.swing.JFrame {
             // Loop para receber os dados de cada linha do resultado
             while (res.next()) {
 
-                // Exibe dados em uma linha da tabela
+                // Adiciona e exibe dados em uma linha da tabela
                 tableModel.addRow(new Object[]{
                     res.getInt("t_id"),
                     res.getDate("t_date"),
@@ -535,6 +538,82 @@ public class Main extends javax.swing.JFrame {
             // Fecha conexões e recursos abertos
             dbConnection.dbClose(conn, pstm, res);
         }
+    }
+
+    private void loadSelected(String action) {
+        try {
+
+            // Obtém a linha selecionada na tabela
+            int selected = tableListAll.getSelectedRow();
+
+            // Se nada foi selecionado ao clicar em um botão...
+            if (selected < 0) {
+                // Mostre uma mensagem de erro
+                PopUps.showAlert("Selecione um item primeiro.");
+
+                // Se selecionou uma linha...
+            } else {
+
+                // Obtém o valor do Id da linha selecionada
+                int selectedId = (int) tableListAll.getModel().getValueAt(selected, 0);
+
+                // SQL que obtém o registro à partir do ID
+                String sql = "SELECT * FROM trecos WHERE t_id = ? AND t_status != 'del'";
+
+                // Conexão com o banco de dados
+                conn = dbConnection.dbConnect();
+
+                // Preparar a query
+                pstm = conn.prepareStatement(sql);
+
+                // Substitui valores variáveis no SQL
+                pstm.setInt(1, selectedId);
+
+                // Executa a query e armazena resultado(s)
+                res = pstm.executeQuery();
+
+                // Carrega o método correto de acordo com a ação escolhida
+                if (action.equals("view")) {
+                    viewData(res);
+                } else if (action.equals("edit")) {
+                    editData(res);
+                } else {
+                    PopUps.showAlert("Nenhum registro foi selecinado.");
+                }
+
+            }
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("" + error);
+        } finally {
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(conn, pstm, res);
+        }
+    }
+
+    // Exibe dados do registro
+    private void viewData(ResultSet res) {
+        try {
+            res.next();
+            labelViewId.setText(res.getString("t_id"));
+            labelViewDate.setText(res.getString("t_date"));
+            labelViewType.setText(res.getString("t_type"));
+            labelViewName.setText(res.getString("t_name"));
+            labelViewStatus.setText(res.getString("t_status"));
+            labelViewDescription.setText(res.getString("t_description"));
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("" + error);
+        } finally {
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(res);
+        }
+    }
+
+    // Edita dados do registro
+    private void editData(ResultSet res) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import javax.swing.JOptionPane;
 
 public class DbConnection {
 
@@ -30,7 +29,7 @@ public class DbConnection {
 
     // Método de conexão com o banco de dados
     public Connection dbConnect() {
-        
+
         try {
             // Inicia a conexão usando a URL
             conn = DriverManager.getConnection(SQLITEURL);
@@ -44,26 +43,34 @@ public class DbConnection {
 
     // Método que encerra todos os recursos abertos
     public void dbClose(Connection conn, PreparedStatement pstm, ResultSet res) {
-        
+
         if (res != null) try {
             res.close();
         } catch (SQLException ignore) {
         }
-        
+
         if (pstm != null) try {
             pstm.close();
         } catch (SQLException ignore) {
         }
-        
+
         if (conn != null) try {
             conn.close();
         } catch (SQLException ignore) {
         }
     }
 
+    public void dbClose(ResultSet res) {
+
+        if (res != null) try {
+            res.close();
+        } catch (SQLException ignore) {
+        }
+    }
+
     // Isso é só um teste que serve de modelo para nosso CRUD
     public static void main(String[] args) {
-        
+
         try {
 
             // Cria objeto de conexão
@@ -92,11 +99,11 @@ public class DbConnection {
 
             // Encerra todos os recursos
             dbConnection.dbClose(testConn, pstm, res);
-            
+
         } catch (SQLException error) {
             // Exibe mensagem de erro
             PopUps.showError(error);
         }
-        
+
     }
 }
