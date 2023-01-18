@@ -9,13 +9,32 @@ import java.awt.Toolkit;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+/*
+ * DICA! SEMPRE adicione as classes abaixo nos componentes do aplicativo.
+ */
+import Control.PopUps;
+import Model.DbConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
  * @author andre.ataide
  */
 public class Main extends javax.swing.JFrame {
+
+    // Faz conexão DAO
+    private DbConnection dbConnection = new DbConnection();
+
+    // Inicializa atributos DAO
+    private Connection conn = null;
+    private PreparedStatement pstm = null;
+    private ResultSet res = null;
 
     /**
      * Creates new form Main
@@ -40,6 +59,9 @@ public class Main extends javax.swing.JFrame {
         DefaultTableCellRenderer tableCell = new DefaultTableCellRenderer();
         tableCell.setHorizontalAlignment(SwingConstants.CENTER);
 
+        // Estética → Define altura padrão das linhas
+        tableListAll.setRowHeight(25);
+
         // Estética → Centraliza os conteúdos das células da coluna[0] Id
         tableListAll.getColumnModel().getColumn(0).setCellRenderer(tableCell);
 
@@ -48,6 +70,9 @@ public class Main extends javax.swing.JFrame {
 
         // Estética → Centraliza os conteúdos das células da coluna[3] Status
         tableListAll.getColumnModel().getColumn(3).setCellRenderer(tableCell);
+
+        // Chama método que lista dados dentro da tabela
+        readAll();
     }
 
     /**
@@ -61,9 +86,9 @@ public class Main extends javax.swing.JFrame {
 
         pnlMainCards = new javax.swing.JPanel();
         panelReadAll = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
+        btnView = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableListAll = new javax.swing.JTable();
         panelUpdate = new javax.swing.JPanel();
@@ -76,7 +101,7 @@ public class Main extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        labelViewName = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -100,19 +125,24 @@ public class Main extends javax.swing.JFrame {
 
         pnlMainCards.setLayout(new java.awt.CardLayout());
 
-        jButton2.setText("Novo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnNew.setText("Novo");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnNewActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Visualizar Selecionado");
-
-        jButton4.setText("Editar Selecionado");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnView.setText("Visualizar Selecionado");
+        btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnViewActionPerformed(evt);
+            }
+        });
+
+        btnEdit.setText("Editar Selecionado");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
             }
         });
 
@@ -154,11 +184,11 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelReadAllLayout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnNew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4)
+                        .addComponent(btnEdit)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3))
+                        .addComponent(btnView))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -167,9 +197,9 @@ public class Main extends javax.swing.JFrame {
             .addGroup(panelReadAllLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnNew)
+                    .addComponent(btnView)
+                    .addComponent(btnEdit))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                 .addContainerGap())
@@ -221,7 +251,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel7.setText("jLabel7");
 
-        jLabel8.setText("jLabel3");
+        labelViewName.setText("None");
 
         jLabel9.setText("jLabel4");
 
@@ -247,7 +277,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                            .addComponent(labelViewName, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                             .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -260,7 +290,7 @@ public class Main extends javax.swing.JFrame {
                 .addGap(64, 64, 64)
                 .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelReadLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
+                        .addComponent(labelViewName)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
@@ -373,13 +403,17 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_mnuFilePanel3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnViewActionPerformed
 
     /**
      * @param args the command line arguments
@@ -410,9 +444,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnView;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -423,10 +457,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelViewName;
     private javax.swing.JMenu mnuEdit;
     private javax.swing.JMenuItem mnuEditFind;
     private javax.swing.JMenuItem mnuEditReplace;
@@ -458,6 +492,49 @@ public class Main extends javax.swing.JFrame {
         // Códigos para exibir o painel "card1"
         CardLayout card = (CardLayout) mainCard.getLayout();
         card.show(mainCard, cardName);
+    }
+
+    private void readAll() {
+        try {
+
+            // Acessa a tabela e o model (dados) dela
+            DefaultTableModel tableModel = (DefaultTableModel) tableListAll.getModel();
+
+            // Remove as linhas "default" da tabela, se necessário
+            tableModel.setNumRows(0);
+
+            // Faz conexão com o banco de dados
+            conn = dbConnection.dbConnect();
+
+            // SQL de consulta ao banco de dados
+            String sql = "SELECT t_id, t_date, t_name, t_status FROM trecos WHERE t_status != 'del'";
+
+            // Prepara, filtra e sanitiza o SQL antes de executar
+            pstm = conn.prepareStatement(sql);
+
+            // Executa query e armazena no "Resultset"
+            res = pstm.executeQuery();
+
+            // Loop para receber os dados de cada linha do resultado
+            while (res.next()) {
+
+                // Exibe dados em uma linha da tabela
+                tableModel.addRow(new Object[]{
+                    res.getInt("t_id"),
+                    res.getDate("t_date"),
+                    res.getString("t_name"),
+                    res.getString("t_status")
+                });
+
+            }
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("" + error);
+        } finally {
+            // Fecha conexões e recursos abertos
+            dbConnection.dbClose(conn, pstm, res);
+        }
     }
 
 }

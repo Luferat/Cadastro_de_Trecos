@@ -1,5 +1,6 @@
 package Model;
 
+import Control.PopUps;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -34,15 +35,7 @@ public class DbConnection {
             // Inicia a conexão usando a URL
             conn = DriverManager.getConnection(SQLITEURL);
         } catch (SQLException error) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Erro de conexão com o banco de dados.\n" + error,
-                    "Oooops!",
-                    JOptionPane.ERROR_MESSAGE
-            );
-
-            // Encerra o aplicativo
-            System.exit(1);
+            PopUps.showError(error);
         }
 
         // Retorna a conexão estabelecida
@@ -62,8 +55,8 @@ public class DbConnection {
         } catch (SQLException ignore) {
         }
         
-        if (res != null) try {
-            res.close();
+        if (conn != null) try {
+            conn.close();
         } catch (SQLException ignore) {
         }
     }
@@ -102,15 +95,7 @@ public class DbConnection {
             
         } catch (SQLException error) {
             // Exibe mensagem de erro
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Erro de excução da query.\n" + error,
-                    "Oooops!",
-                    JOptionPane.ERROR_MESSAGE
-            );
-
-            // Encerra o aplicativo
-            System.exit(1);
+            PopUps.showError(error);
         }
         
     }
