@@ -6,16 +6,34 @@ package View;
 
 import java.awt.CardLayout;
 import java.awt.Toolkit;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+/*
+ * DICA! SEMPRE adicione as classes abaixo nos componentes do aplicativo.
+ */
+import Control.PopUps;
+import Model.DbConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
  * @author andre.ataide
  */
 public class Main extends javax.swing.JFrame {
+
+    // Faz conexão DAO
+    private DbConnection dbConnection = new DbConnection();
+
+    // Inicializa atributos DAO
+    private Connection conn = null;
+    private PreparedStatement pstm = null;
+    private ResultSet res = null;
 
     /**
      * Creates new form Main
@@ -40,6 +58,9 @@ public class Main extends javax.swing.JFrame {
         DefaultTableCellRenderer tableCell = new DefaultTableCellRenderer();
         tableCell.setHorizontalAlignment(SwingConstants.CENTER);
 
+        // Estética → Define altura padrão das linhas
+        tableListAll.setRowHeight(25);
+
         // Estética → Centraliza os conteúdos das células da coluna[0] Id
         tableListAll.getColumnModel().getColumn(0).setCellRenderer(tableCell);
 
@@ -48,6 +69,9 @@ public class Main extends javax.swing.JFrame {
 
         // Estética → Centraliza os conteúdos das células da coluna[3] Status
         tableListAll.getColumnModel().getColumn(3).setCellRenderer(tableCell);
+
+        // Chama método que lista dados dentro da tabela
+        readAll();
     }
 
     /**
@@ -61,34 +85,65 @@ public class Main extends javax.swing.JFrame {
 
         pnlMainCards = new javax.swing.JPanel();
         panelReadAll = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
+        btnView = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableListAll = new javax.swing.JTable();
         panelUpdate = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        panelForm1 = new View.panelForm();
-        panelRead = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        txtEditDate = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        txtEditStatus = new javax.swing.JCheckBox();
+        txtEditId = new javax.swing.JTextField();
+        txtEditType = new javax.swing.JTextField();
+        txtEditName = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtEditDescription = new javax.swing.JTextArea();
+        btnEditSave = new javax.swing.JButton();
+        btnEditReset = new javax.swing.JButton();
+        btnEditReset1 = new javax.swing.JButton();
+        panelRead = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        lblViewDescription = new javax.swing.JLabel();
+        lblViewDate = new javax.swing.JLabel();
+        lblViewType = new javax.swing.JLabel();
+        lblViewId = new javax.swing.JLabel();
+        lblViewName = new javax.swing.JLabel();
+        lblViewStatus = new javax.swing.JLabel();
+        btnViewEdit = new javax.swing.JButton();
+        btnViewDelete = new javax.swing.JButton();
+        btnListAll = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtViewDescription = new javax.swing.JTextArea();
+        txtViewId = new javax.swing.JTextField();
+        txtViewStatus = new javax.swing.JTextField();
+        txtViewDate = new javax.swing.JTextField();
+        txtViewType = new javax.swing.JTextField();
+        txtViewName = new javax.swing.JTextField();
+        panelInsert = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        btnAddListAll = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtAddDescription = new javax.swing.JTextArea();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        btnAddSave = new javax.swing.JButton();
+        btnAddReset = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
-        mnuFilePanel1 = new javax.swing.JMenuItem();
-        mnuFilePanel2 = new javax.swing.JMenuItem();
-        mnuFilePanel3 = new javax.swing.JMenuItem();
-        mnuEdit = new javax.swing.JMenu();
-        mnuEditFind = new javax.swing.JMenuItem();
-        mnuEditReplace = new javax.swing.JMenuItem();
+        mnuListAll = new javax.swing.JMenuItem();
+        mnuAdd = new javax.swing.JMenuItem();
+        mnuExit = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpSupport = new javax.swing.JMenuItem();
         mnuHelpUpdates = new javax.swing.JMenuItem();
@@ -100,22 +155,21 @@ public class Main extends javax.swing.JFrame {
 
         pnlMainCards.setLayout(new java.awt.CardLayout());
 
-        jButton2.setText("Novo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnNew.setText("Novo");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnNewActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Visualizar Selecionado");
-
-        jButton4.setText("Editar Selecionado");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnView.setText("Visualizar Selecionado");
+        btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnViewActionPerformed(evt);
             }
         });
 
+        tableListAll.setAutoCreateRowSorter(true);
         tableListAll.setFont(tableListAll.getFont().deriveFont(tableListAll.getFont().getSize()+3f));
         tableListAll.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -135,6 +189,8 @@ public class Main extends javax.swing.JFrame {
         });
         tableListAll.setColumnSelectionAllowed(true);
         tableListAll.setMinimumSize(new java.awt.Dimension(100, 100));
+        tableListAll.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableListAll.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(tableListAll);
         tableListAll.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (tableListAll.getColumnModel().getColumnCount() > 0) {
@@ -154,12 +210,10 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelReadAllLayout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnNew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE))
+                        .addComponent(btnView))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelReadAllLayout.setVerticalGroup(
@@ -167,160 +221,479 @@ public class Main extends javax.swing.JFrame {
             .addGroup(panelReadAllLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelReadAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnNew)
+                    .addComponent(btnView))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        pnlMainCards.add(panelReadAll, "card1");
+        pnlMainCards.add(panelReadAll, "cardReadAll");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel1.setText("Editar Treco");
+        jLabel1.setText("Editar Registro");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Altere apenas os dados necessários mantendo os outros intactos.");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText("ID:");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Tipo:");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Data:");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Nome:");
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Descrition:");
+
+        txtEditDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Status:");
+
+        txtEditStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEditStatus.setText("On");
+        txtEditStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEditStatusActionPerformed(evt);
+            }
+        });
+
+        txtEditId.setEditable(false);
+        txtEditId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEditId.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtEditType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtEditName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtEditDescription.setColumns(20);
+        txtEditDescription.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEditDescription.setLineWrap(true);
+        txtEditDescription.setRows(5);
+        txtEditDescription.setWrapStyleWord(true);
+        jScrollPane3.setViewportView(txtEditDescription);
+
+        btnEditSave.setText("Salvar");
+        btnEditSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditSaveActionPerformed(evt);
+            }
+        });
+
+        btnEditReset.setText("Recarregar");
+        btnEditReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditResetActionPerformed(evt);
+            }
+        });
+
+        btnEditReset1.setText("Listar Todos");
+        btnEditReset1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditReset1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelUpdateLayout = new javax.swing.GroupLayout(panelUpdate);
         panelUpdate.setLayout(panelUpdateLayout);
         panelUpdateLayout.setHorizontalGroup(
             panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelUpdateLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
                     .addGroup(panelUpdateLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelForm1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panelUpdateLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEditReset1)
+                                .addGap(10, 10, 10))))
+                    .addGroup(panelUpdateLayout.createSequentialGroup()
+                        .addContainerGap(136, Short.MAX_VALUE)
+                        .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panelUpdateLayout.createSequentialGroup()
+                                .addComponent(btnEditSave)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEditReset))
+                            .addGroup(panelUpdateLayout.createSequentialGroup()
+                                .addComponent(txtEditId, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtEditStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtEditType)
+                            .addComponent(txtEditName)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(txtEditDate))
+                        .addGap(0, 164, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelUpdateLayout.setVerticalGroup(
             panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelUpdateLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(btnEditReset1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel9)
+                    .addComponent(txtEditStatus)
+                    .addComponent(txtEditId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelForm1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtEditDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEditType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEditName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelUpdateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEditSave)
+                    .addComponent(btnEditReset))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
-        pnlMainCards.add(panelUpdate, "card2");
+        pnlMainCards.add(panelUpdate, "cardEdit");
 
-        jLabel3.setText("jLabel3");
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jLabel3.setText("Visualizar Registro");
 
-        jLabel4.setText("jLabel4");
+        lblViewDescription.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblViewDescription.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViewDescription.setText("Descrição:");
 
-        jLabel5.setText("jLabel5");
+        lblViewDate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblViewDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViewDate.setText("Data:");
 
-        jLabel6.setText("jLabel6");
+        lblViewType.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblViewType.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViewType.setText("Tipo:");
 
-        jLabel7.setText("jLabel7");
+        lblViewId.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblViewId.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViewId.setText("ID:");
 
-        jLabel8.setText("jLabel3");
+        lblViewName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblViewName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViewName.setText("Nome:");
 
-        jLabel9.setText("jLabel4");
+        lblViewStatus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblViewStatus.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViewStatus.setText("Status:");
 
-        jLabel10.setText("jLabel5");
+        btnViewEdit.setText("Editar Registro");
+        btnViewEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewEditActionPerformed(evt);
+            }
+        });
 
-        jLabel11.setText("jLabel6");
+        btnViewDelete.setText("Apagar Registro");
+        btnViewDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewDeleteActionPerformed(evt);
+            }
+        });
 
-        jLabel12.setText("jLabel7");
+        btnListAll.setText("Listar Todos");
+        btnListAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListAllActionPerformed(evt);
+            }
+        });
+
+        txtViewDescription.setEditable(false);
+        txtViewDescription.setColumns(20);
+        txtViewDescription.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewDescription.setLineWrap(true);
+        txtViewDescription.setRows(5);
+        txtViewDescription.setWrapStyleWord(true);
+        txtViewDescription.setBorder(null);
+        jScrollPane1.setViewportView(txtViewDescription);
+
+        txtViewId.setEditable(false);
+        txtViewId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewId.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtViewStatus.setEditable(false);
+        txtViewStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtViewStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtViewStatusActionPerformed(evt);
+            }
+        });
+
+        txtViewDate.setEditable(false);
+        txtViewDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtViewDateActionPerformed(evt);
+            }
+        });
+
+        txtViewType.setEditable(false);
+        txtViewType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtViewName.setEditable(false);
+        txtViewName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtViewNameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelReadLayout = new javax.swing.GroupLayout(panelRead);
         panelRead.setLayout(panelReadLayout);
         panelReadLayout.setHorizontalGroup(
             panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelReadLayout.createSequentialGroup()
-                .addGap(116, 116, 116)
-                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, Short.MAX_VALUE)
+                .addComponent(btnListAll)
+                .addGap(16, 16, 16))
+            .addGroup(panelReadLayout.createSequentialGroup()
+                .addContainerGap(134, Short.MAX_VALUE)
                 .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(242, Short.MAX_VALUE))
+                    .addGroup(panelReadLayout.createSequentialGroup()
+                        .addComponent(lblViewId, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtViewId, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblViewStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtViewStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelReadLayout.createSequentialGroup()
+                        .addComponent(lblViewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtViewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelReadLayout.createSequentialGroup()
+                        .addComponent(lblViewType, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtViewType, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelReadLayout.createSequentialGroup()
+                        .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblViewName, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblViewDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(panelReadLayout.createSequentialGroup()
+                                .addComponent(btnViewEdit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                                .addComponent(btnViewDelete))
+                            .addComponent(txtViewName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))))
+                .addContainerGap(148, Short.MAX_VALUE))
         );
         panelReadLayout.setVerticalGroup(
             panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelReadLayout.createSequentialGroup()
-                .addGap(64, 64, 64)
+                .addContainerGap()
+                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(btnListAll))
+                .addGap(31, 31, 31)
+                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblViewId)
+                    .addComponent(lblViewStatus)
+                    .addComponent(txtViewId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtViewStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblViewDate)
+                    .addComponent(txtViewDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblViewType)
+                    .addComponent(txtViewType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblViewName)
+                    .addComponent(txtViewName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelReadLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel9)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel11)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel12))
-                    .addGroup(panelReadLayout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7)))
-                .addContainerGap(201, Short.MAX_VALUE))
+                    .addComponent(lblViewDescription)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnViewEdit)
+                    .addComponent(btnViewDelete))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
-        pnlMainCards.add(panelRead, "card3");
+        pnlMainCards.add(panelRead, "cardView");
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jLabel10.setText("Novo Registro");
+
+        btnAddListAll.setText("Listar Todos");
+        btnAddListAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddListAllActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Todos os campos devem ser preenchidos.");
+
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Descrição:");
+
+        txtAddDescription.setColumns(20);
+        txtAddDescription.setRows(5);
+        jScrollPane4.setViewportView(txtAddDescription);
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("Nome:");
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("Tipo:");
+
+        btnAddSave.setText("Salvar");
+
+        btnAddReset.setText("Limpar");
+
+        javax.swing.GroupLayout panelInsertLayout = new javax.swing.GroupLayout(panelInsert);
+        panelInsert.setLayout(panelInsertLayout);
+        panelInsertLayout.setHorizontalGroup(
+            panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInsertLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInsertLayout.createSequentialGroup()
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(panelInsertLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 386, Short.MAX_VALUE)
+                        .addComponent(btnAddListAll)
+                        .addGap(15, 15, 15))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInsertLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panelInsertLayout.createSequentialGroup()
+                                .addComponent(btnAddSave)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAddReset))
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        panelInsertLayout.setVerticalGroup(
+            panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInsertLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(btnAddListAll))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAddSave)
+                    .addComponent(btnAddReset))
+                .addContainerGap(136, Short.MAX_VALUE))
+        );
+
+        pnlMainCards.add(panelInsert, "cardInsert");
 
         mnuFile.setText("Arquivo");
 
-        mnuFilePanel1.setText("Abre Painel 1");
-        mnuFilePanel1.addActionListener(new java.awt.event.ActionListener() {
+        mnuListAll.setText("Listar todos...");
+        mnuListAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuFilePanel1ActionPerformed(evt);
+                mnuListAllActionPerformed(evt);
             }
         });
-        mnuFile.add(mnuFilePanel1);
+        mnuFile.add(mnuListAll);
 
-        mnuFilePanel2.setText("Abre Painel 2");
-        mnuFilePanel2.addActionListener(new java.awt.event.ActionListener() {
+        mnuAdd.setText("Novo...");
+        mnuAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuFilePanel2ActionPerformed(evt);
+                mnuAddActionPerformed(evt);
             }
         });
-        mnuFile.add(mnuFilePanel2);
+        mnuFile.add(mnuAdd);
 
-        mnuFilePanel3.setText("Abre Painel 3");
-        mnuFilePanel3.addActionListener(new java.awt.event.ActionListener() {
+        mnuExit.setText("Sair");
+        mnuExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuFilePanel3ActionPerformed(evt);
+                mnuExitActionPerformed(evt);
             }
         });
-        mnuFile.add(mnuFilePanel3);
+        mnuFile.add(mnuExit);
 
         jMenuBar1.add(mnuFile);
-
-        mnuEdit.setText("Editar");
-
-        mnuEditFind.setText("Procurar");
-        mnuEdit.add(mnuEditFind);
-
-        mnuEditReplace.setText("Substituir");
-        mnuEdit.add(mnuEditReplace);
-
-        jMenuBar1.add(mnuEdit);
 
         mnuHelp.setText("Ajuda");
 
@@ -352,34 +725,89 @@ public class Main extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mnuFilePanel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel1ActionPerformed
+    private void mnuListAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuListAllActionPerformed
 
         // Exibir o painel "card1"
-        openCard("card1");
+        openCard("cardReadAll");
 
-    }//GEN-LAST:event_mnuFilePanel1ActionPerformed
+    }//GEN-LAST:event_mnuListAllActionPerformed
 
-    private void mnuFilePanel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel2ActionPerformed
+    private void mnuAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAddActionPerformed
+        openCard("cardInsert");
+    }//GEN-LAST:event_mnuAddActionPerformed
 
-        // Exibir o painel "card1"
-        openCard("card2");
+    private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
 
-    }//GEN-LAST:event_mnuFilePanel2ActionPerformed
+        // Fecha o aplicativo usando poupu de confirmação
+        exitApp();
 
-    private void mnuFilePanel3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel3ActionPerformed
+    }//GEN-LAST:event_mnuExitActionPerformed
 
-        // Exibir o painel "card1"
-        openCard("card3");
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        openCard("cardInsert");
+    }//GEN-LAST:event_btnNewActionPerformed
 
-    }//GEN-LAST:event_mnuFilePanel3ActionPerformed
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+        loadSelected("view");
+    }//GEN-LAST:event_btnViewActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnListAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListAllActionPerformed
+        // Mostra o card que lista todos os registros
+        openCard("cardReadAll");
+    }//GEN-LAST:event_btnListAllActionPerformed
+
+    private void btnViewDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDeleteActionPerformed
+        // Converte o Id do campo para inteiro e chama o método para apagar
+        deleteData(Integer.parseInt(txtViewId.getText()));
+    }//GEN-LAST:event_btnViewDeleteActionPerformed
+
+    private void txtViewStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtViewStatusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_txtViewStatusActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void txtViewDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtViewDateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_txtViewDateActionPerformed
+
+    private void txtViewNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtViewNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtViewNameActionPerformed
+
+    private void btnViewEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewEditActionPerformed
+        //Carrega os dados do banco e dados, chamando em seguida o método de edição
+        loadSelected("edit");
+    }//GEN-LAST:event_btnViewEditActionPerformed
+
+    private void txtEditStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEditStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEditStatusActionPerformed
+
+    private void btnEditReset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditReset1ActionPerformed
+        // Mostra o card que lista todos os registros
+        openCard("cardReadAll");
+    }//GEN-LAST:event_btnEditReset1ActionPerformed
+
+    private void btnEditResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditResetActionPerformed
+        //Carrega os dados do banco e dados, chamando em seguida o método de edição
+        loadSelected("edit");
+    }//GEN-LAST:event_btnEditResetActionPerformed
+
+    private void btnEditSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditSaveActionPerformed
+        // Executa método que atualiza o banco de dados
+        updateData();
+    }//GEN-LAST:event_btnEditSaveActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void btnAddListAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddListAllActionPerformed
+        openCard("cardReadAll");
+    }//GEN-LAST:event_btnAddListAllActionPerformed
 
     /**
      * @param args the command line arguments
@@ -410,13 +838,23 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnAddListAll;
+    private javax.swing.JButton btnAddReset;
+    private javax.swing.JButton btnAddSave;
+    private javax.swing.JButton btnEditReset;
+    private javax.swing.JButton btnEditReset1;
+    private javax.swing.JButton btnEditSave;
+    private javax.swing.JButton btnListAll;
+    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnView;
+    private javax.swing.JButton btnViewDelete;
+    private javax.swing.JButton btnViewEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -426,24 +864,45 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JMenu mnuEdit;
-    private javax.swing.JMenuItem mnuEditFind;
-    private javax.swing.JMenuItem mnuEditReplace;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblViewDate;
+    private javax.swing.JLabel lblViewDescription;
+    private javax.swing.JLabel lblViewId;
+    private javax.swing.JLabel lblViewName;
+    private javax.swing.JLabel lblViewStatus;
+    private javax.swing.JLabel lblViewType;
+    private javax.swing.JMenuItem mnuAdd;
+    private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
-    private javax.swing.JMenuItem mnuFilePanel1;
-    private javax.swing.JMenuItem mnuFilePanel2;
-    private javax.swing.JMenuItem mnuFilePanel3;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpSite;
     private javax.swing.JMenuItem mnuHelpSupport;
     private javax.swing.JMenuItem mnuHelpUpdates;
-    private View.panelForm panelForm1;
+    private javax.swing.JMenuItem mnuListAll;
+    private javax.swing.JPanel panelInsert;
     private javax.swing.JPanel panelRead;
     private javax.swing.JPanel panelReadAll;
     private javax.swing.JPanel panelUpdate;
     private javax.swing.JPanel pnlMainCards;
     private javax.swing.JTable tableListAll;
+    private javax.swing.JTextArea txtAddDescription;
+    private javax.swing.JTextField txtEditDate;
+    private javax.swing.JTextArea txtEditDescription;
+    private javax.swing.JTextField txtEditId;
+    private javax.swing.JTextField txtEditName;
+    private javax.swing.JCheckBox txtEditStatus;
+    private javax.swing.JTextField txtEditType;
+    private javax.swing.JTextField txtViewDate;
+    private javax.swing.JTextArea txtViewDescription;
+    private javax.swing.JTextField txtViewId;
+    private javax.swing.JTextField txtViewName;
+    private javax.swing.JTextField txtViewStatus;
+    private javax.swing.JTextField txtViewType;
     // End of variables declaration//GEN-END:variables
 
     // Abre um card 
@@ -453,11 +912,275 @@ public class Main extends javax.swing.JFrame {
         card.show(pnlMainCards, cardName);
     }
 
-    // Abre um card de um mainCard específico
-    public void openCard(String cardName, JPanel mainCard) {
-        // Códigos para exibir o painel "card1"
-        CardLayout card = (CardLayout) mainCard.getLayout();
-        card.show(mainCard, cardName);
+    // Lê todos os registros válidos e popula a tabela
+    private void readAll() {
+        try {
+
+            // Acessa a tabela e o model (dados) dela
+            DefaultTableModel tableModel = (DefaultTableModel) tableListAll.getModel();
+
+            // Remove as linhas "default" da tabela, se necessário
+            tableModel.setNumRows(0);
+
+            // Faz conexão com o banco de dados
+            conn = dbConnection.dbConnect();
+
+            // SQL de consulta ao banco de dados
+            String sql = "SELECT t_id, t_date, t_name, t_status FROM trecos WHERE t_status != 'del'";
+
+            // Prepara, filtra e sanitiza o SQL antes de executar
+            pstm = conn.prepareStatement(sql);
+
+            // Executa query e armazena no "Resultset"
+            res = pstm.executeQuery();
+
+            // Loop para receber os dados de cada linha do resultado
+            while (res.next()) {
+
+                // Adiciona e exibe dados em uma linha da tabela
+                tableModel.addRow(new Object[]{
+                    res.getInt("t_id"),
+                    res.getDate("t_date"),
+                    res.getString("t_name"),
+                    res.getString("t_status")
+                });
+
+            }
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("Main.readAll\n" + error);
+        } finally {
+            // Fecha conexões e recursos abertos
+            dbConnection.dbClose(conn, pstm, res);
+        }
     }
 
+    // Carrega o registro selecionado na tabela
+    private void loadSelected(String action) {
+        try {
+
+            // Obtém a linha selecionada na tabela
+            int selected = tableListAll.getSelectedRow();
+
+            // Se nada foi selecionado ao clicar em um botão...
+            if (selected < 0) {
+                // Mostre uma mensagem de erro
+                PopUps.showAlert("Selecione um item primeiro.");
+
+                // Se selecionou uma linha...
+            } else {
+
+                // Obtém o valor do Id da linha selecionada
+                int selectedId = (int) tableListAll.getModel().getValueAt(selected, 0);
+
+                // SQL que obtém o registro à partir do ID
+                String sql = "SELECT * FROM trecos WHERE t_id = ? AND t_status != 'del'";
+
+                // Conexão com o banco de dados
+                conn = dbConnection.dbConnect();
+
+                // Preparar a query
+                pstm = conn.prepareStatement(sql);
+
+                // Substitui valores variáveis no SQL
+                pstm.setInt(1, selectedId);
+
+                // Executa a query e armazena resultado(s)
+                res = pstm.executeQuery();
+
+                // Carrega o método correto de acordo com a ação escolhida
+                switch (action) {
+                    case "view" ->
+                        viewData(res);
+                    case "edit" ->
+                        editData(res);
+                    default ->
+                        PopUps.showAlert("Nenhum registro foi selecinado.");
+                }
+
+            }
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("Main.loadSelected\n" + error);
+        } finally {
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(conn, pstm, res);
+        }
+    }
+
+    // Exibe dados do registro no painel de visualização de registro único
+    private void viewData(ResultSet res) {
+        try {
+
+            /// Recebe o registro do banco de dados
+            res.next();
+
+            // Exibe nos campos dor formulário de visualização
+            txtViewId.setText(res.getString("t_id"));
+            txtViewDate.setText(res.getString("t_date"));
+            txtViewType.setText(res.getString("t_type"));
+            txtViewName.setText(res.getString("t_name"));
+            txtViewStatus.setText(res.getString("t_status"));
+            txtViewDescription.setText(res.getString("t_description"));
+
+            // Mostra o card com os dados do registro
+            openCard("cardView");
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("Main.viewData\n" + error);
+        } finally {
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(null, null, res);
+        }
+    }
+
+    // Edita dados do registro
+    private void editData(ResultSet res) {
+
+        try {
+
+            /// Recebe o registro do banco de dados
+            res.next();
+
+            // Exibe nos campos dor formulário de visualização
+            txtEditId.setText(res.getString("t_id"));
+            txtEditDate.setText(res.getString("t_date"));
+            txtEditType.setText(res.getString("t_type"));
+            txtEditName.setText(res.getString("t_name"));
+            txtEditDescription.setText(res.getString("t_description"));
+
+            // Se o satus = "on" marca o checkbox
+            if (res.getString("t_status").equals("on")) {
+                txtEditStatus.setSelected(true);
+            }
+
+            // Mostra o card com os dados do registro
+            openCard("cardEdit");
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("Main.editData\n" + error);
+        } finally {
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(null, null, res);
+        }
+
+    }
+
+    // Apaga o registro selecionado
+    private void deleteData(int dataId) {
+
+        // Cria caixa de diálogo popup para confirmação
+        int dialogButton = PopUps.showConfirm("Oooops!", "Tem certeza que deseja apagar o registro?");
+
+        // Se clicou em Sim
+        if (dialogButton == 0) {
+
+            try {
+
+                // Query que altera o status do registro para apagado
+                String sql = "UPDATE trecos SET t_status = 'del' WHERE t_id = ?";
+
+                // Conexão com o banco de dados
+                conn = dbConnection.dbConnect();
+
+                // Preparar a query
+                pstm = conn.prepareStatement(sql);
+
+                // Substitui valores variáveis no SQL
+                pstm.setInt(1, dataId);
+
+                // Executa a query
+                pstm.executeUpdate();
+
+                // Atualiza a listagem de registros
+                readAll();
+
+                // Mostra a listagem de registros
+                openCard("cardReadAll");
+
+            } catch (SQLException error) {
+                // Se ocorrer erro de SQL, exibe no popup
+                PopUps.showError("Main.deleteData\n" + error);
+            } finally {
+                // Fecha conexões e recursos abertos      
+                dbConnection.dbClose(conn, pstm, null);
+            }
+
+        }
+
+    }
+
+    // Atualiza o registro no banco de dados
+    public void updateData() {
+
+        // Cria caixa de diálogo popup para confirmação
+        int dialogButton = PopUps.showConfirm("Oooops!", "Tem certeza que deseja salvar as alterações?");
+
+        // Se clicou em Sim
+        if (dialogButton == 0) {
+
+            try {
+
+                // Query que altera o status do registro para apagado
+                String sql = "UPDATE trecos SET t_date = ?, t_type = ?, t_name = ?, t_description = ?, t_status = ? WHERE t_id = ?";
+
+                // Conexão com o banco de dados
+                conn = dbConnection.dbConnect();
+
+                // Preparar a query
+                pstm = conn.prepareStatement(sql);
+
+                // Substitui valores variáveis no SQL
+                pstm.setString(6, txtEditId.getText());
+                pstm.setString(1, txtEditDate.getText());
+                pstm.setString(2, txtEditType.getText());
+                pstm.setString(3, txtEditName.getText());
+                pstm.setString(4, txtEditDescription.getText());
+
+                // Trata o campo status
+                if (txtEditStatus.isSelected()) {
+                    pstm.setString(5, "on");
+                } else {
+                    pstm.setString(5, "off");
+                }
+
+                // Executa a query
+                pstm.executeUpdate();
+
+                // Atualiza a listagem de registros
+                readAll();
+
+                // Mostra a listagem de registros
+                openCard("cardReadAll");
+
+            } catch (SQLException error) {
+                // Se ocorrer erro de SQL, exibe no popup
+                PopUps.showError("Main.deleteData\n" + error);
+            } finally {
+                // Fecha conexões e recursos abertos      
+                dbConnection.dbClose(conn, pstm, null);
+            }
+
+        }
+
+    }
+
+    // Fecha o aplicativo com um popup de confirmação
+    public void exitApp() {
+
+        // Cria caixa de diálogo popup
+        int dialogButton = PopUps.showConfirm("Saindo...", "Tem certeza que deseja sair do aplicativo?");
+
+        // Se clicou em Sim
+        if (dialogButton == 0) {
+
+            // Fecha aplicativo
+            System.exit(0);
+
+        }
+    }
 }
