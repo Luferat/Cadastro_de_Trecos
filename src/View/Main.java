@@ -15,13 +15,11 @@ import javax.swing.table.JTableHeader;
  * DICA! SEMPRE adicione as classes abaixo nos componentes do aplicativo.
  */
 import Control.PopUps;
-import static Control.PopUps.showConfirm;
 import Model.DbConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 /**
  *
