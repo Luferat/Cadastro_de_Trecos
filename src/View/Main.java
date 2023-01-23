@@ -588,6 +588,7 @@ public class Main extends javax.swing.JFrame {
         card.show(pnlMainCards, cardName);
     }
 
+    // Lê todos os registros válidos e popula a tabela
     private void readAll() {
         try {
 
@@ -631,6 +632,7 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+    // Carrega o registro selecionado na tabela
     private void loadSelected(String action) {
         try {
 
