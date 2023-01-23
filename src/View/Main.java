@@ -15,11 +15,13 @@ import javax.swing.table.JTableHeader;
  * DICA! SEMPRE adicione as classes abaixo nos componentes do aplicativo.
  */
 import Control.PopUps;
+import static Control.PopUps.showConfirm;
 import Model.DbConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -116,9 +118,6 @@ public class Main extends javax.swing.JFrame {
         mnuListAll = new javax.swing.JMenuItem();
         mnuAdd = new javax.swing.JMenuItem();
         mnuExit = new javax.swing.JMenuItem();
-        mnuEdit = new javax.swing.JMenu();
-        mnuEditFind = new javax.swing.JMenuItem();
-        mnuEditReplace = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpSupport = new javax.swing.JMenuItem();
         mnuHelpUpdates = new javax.swing.JMenuItem();
@@ -433,16 +432,6 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuFile);
 
-        mnuEdit.setText("Editar");
-
-        mnuEditFind.setText("Procurar");
-        mnuEdit.add(mnuEditFind);
-
-        mnuEditReplace.setText("Substituir");
-        mnuEdit.add(mnuEditReplace);
-
-        jMenuBar1.add(mnuEdit);
-
         mnuHelp.setText("Ajuda");
 
         mnuHelpSupport.setText("Suporte");
@@ -489,8 +478,8 @@ public class Main extends javax.swing.JFrame {
 
     private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
 
-        // Sai do aplicativo
-        System.exit(0);
+        // Fecha o aplicativo usando poupu de confirmação
+        exitApp();
 
     }//GEN-LAST:event_mnuExitActionPerformed
 
@@ -508,7 +497,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnListAllActionPerformed
 
     private void btnViewDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDeleteActionPerformed
-        // TODO add your handling code here:
+        // Converte o Id do campo para inteiro e chama o método para apagar
+        deleteData(Integer.parseInt(txtViewId.getText()));
     }//GEN-LAST:event_btnViewDeleteActionPerformed
 
     private void txtViewStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtViewStatusActionPerformed
@@ -570,9 +560,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lblViewStatus;
     private javax.swing.JLabel lblViewType;
     private javax.swing.JMenuItem mnuAdd;
-    private javax.swing.JMenu mnuEdit;
-    private javax.swing.JMenuItem mnuEditFind;
-    private javax.swing.JMenuItem mnuEditReplace;
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenu mnuHelp;
@@ -729,4 +716,72 @@ public class Main extends javax.swing.JFrame {
 
     }
 
+    // Apaga o registro selecionado
+    private void deleteData(int dataId) {
+
+        // Cria caixa de diálogo popup para confirmação
+        int dialogButton = PopUps.showConfirm("Oooops!", "Tem certeza que deseja apagar o registro?");
+
+        // Se clicou em Sim
+        if (dialogButton == JOptionPane.YES_OPTION) {
+
+            try {
+
+                // Query que altera o status do registro para apagado
+                String sql = "UPDATE trecos SET t_status = 'del' WHERE t_id = ?";
+
+                // Conexão com o banco de dados
+                conn = dbConnection.dbConnect();
+
+                // Preparar a query
+                pstm = conn.prepareStatement(sql);
+
+                // Substitui valores variáveis no SQL
+                pstm.setInt(1, dataId);
+
+                // Executa a query
+                pstm.executeUpdate();
+
+                // Atualiza a listagem de registros
+                readAll();
+
+                // Mostra a listagem de registros
+                openCard("cardReadAll");
+
+            } catch (SQLException error) {
+                // Se ocorrer erro de SQL, exibe no popup
+                PopUps.showError("Main.deleteData\n" + error);
+            } finally {
+                // Fecha conexões e recursos abertos      
+                dbConnection.dbClose(conn, pstm, null);
+            }
+
+            // Se clicou em Não
+        } else {
+
+            // Fecha o popup
+            remove(dialogButton);
+        }
+
+    }
+
+    // Fecha o aplicativo com um popup de confirmação
+    public void exitApp() {
+
+        // Cria caixa de diálogo popup
+        int dialogButton = PopUps.showConfirm("Saindo...", "Tem certeza que deseja sair do aplicativo?");
+
+        // Se clicou em Sim
+        if (dialogButton == JOptionPane.YES_OPTION) {
+
+            // Fecha aplicativo
+            System.exit(0);
+
+            // Se clicou em Não
+        } else {
+
+            // Fecha o popup
+            remove(dialogButton);
+        }
+    }
 }

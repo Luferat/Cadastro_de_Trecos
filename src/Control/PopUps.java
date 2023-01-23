@@ -29,4 +29,25 @@ public class PopUps {
 
     }
 
+    public static int showConfirm(String title, String message) {
+
+        // Texto dos botões do popup
+        Object[] options = {"Sim", "Não"};
+
+        // Cria caixa de diálogo popup
+        int dialogButton = JOptionPane.showOptionDialog(
+                null,
+                message,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]
+        );
+
+        return dialogButton;
+
+    }
+
 }
