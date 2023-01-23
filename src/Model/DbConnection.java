@@ -20,7 +20,7 @@ public class DbConnection {
     // String de conexão com o banco de dados MySQL
     //                                   tipo    servidor  porta database   usuário       senha
     //                                    ↓       ↓         ↓     ↓           ↓             ↓ 
-    private final String MYSQLURL = "jdbc:mysql://localhost:3306/trecos?user=root&password=";
+    private final String MYSQLURL = "jdbc:mysql://localhost:3306/trecos?user=root&password=root";
 
     // String de conexão com o banco de dados PostGreeSQL
     //                                      tipo         servidor  porta database   usuário      senha
