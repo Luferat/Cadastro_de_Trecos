@@ -60,14 +60,6 @@ public class DbConnection {
         }
     }
 
-    public void dbClose(ResultSet res) {
-
-        if (res != null) try {
-            res.close();
-        } catch (SQLException ignore) {
-        }
-    }
-
     // Isso é só um teste que serve de modelo para nosso CRUD
     public static void main(String[] args) {
 

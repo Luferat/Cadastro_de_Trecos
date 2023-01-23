@@ -709,7 +709,7 @@ public class Main extends javax.swing.JFrame {
             PopUps.showError("Main.viewData\n" + error);
         } finally {
             // Fecha conexões e recursos abertos      
-            dbConnection.dbClose(res);
+            dbConnection.dbClose(null, null, res);
         }
     }
 
@@ -725,7 +725,7 @@ public class Main extends javax.swing.JFrame {
         int dialogButton = PopUps.showConfirm("Oooops!", "Tem certeza que deseja apagar o registro?");
 
         // Se clicou em Sim
-        if (dialogButton == JOptionPane.YES_OPTION) {
+        if (dialogButton == 0) {
 
             try {
 
@@ -758,11 +758,6 @@ public class Main extends javax.swing.JFrame {
                 dbConnection.dbClose(conn, pstm, null);
             }
 
-            // Se clicou em Não
-        } else {
-
-            // Fecha o popup
-            remove(dialogButton);
         }
 
     }
@@ -774,16 +769,11 @@ public class Main extends javax.swing.JFrame {
         int dialogButton = PopUps.showConfirm("Saindo...", "Tem certeza que deseja sair do aplicativo?");
 
         // Se clicou em Sim
-        if (dialogButton == JOptionPane.YES_OPTION) {
+        if (dialogButton == 0) {
 
             // Fecha aplicativo
             System.exit(0);
 
-            // Se clicou em Não
-        } else {
-
-            // Fecha o popup
-            remove(dialogButton);
         }
     }
 }
