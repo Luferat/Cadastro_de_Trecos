@@ -34,7 +34,7 @@ public class DbConnection {
             // Inicia a conexão usando a URL
             conn = DriverManager.getConnection(SQLITEURL);
         } catch (SQLException error) {
-            PopUps.showError(error);
+            PopUps.showError("DbConnection.dbConnect\n" + error);
         }
 
         // Retorna a conexão estabelecida
@@ -102,7 +102,7 @@ public class DbConnection {
 
         } catch (SQLException error) {
             // Exibe mensagem de erro
-            PopUps.showError(error);
+            PopUps.showError("DbConnection.main\n" + error);
         }
 
     }
