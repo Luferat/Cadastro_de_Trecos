@@ -116,9 +116,6 @@ public class Main extends javax.swing.JFrame {
         mnuListAll = new javax.swing.JMenuItem();
         mnuAdd = new javax.swing.JMenuItem();
         mnuExit = new javax.swing.JMenuItem();
-        mnuEdit = new javax.swing.JMenu();
-        mnuEditFind = new javax.swing.JMenuItem();
-        mnuEditReplace = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpSupport = new javax.swing.JMenuItem();
         mnuHelpUpdates = new javax.swing.JMenuItem();
@@ -433,16 +430,6 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuFile);
 
-        mnuEdit.setText("Editar");
-
-        mnuEditFind.setText("Procurar");
-        mnuEdit.add(mnuEditFind);
-
-        mnuEditReplace.setText("Substituir");
-        mnuEdit.add(mnuEditReplace);
-
-        jMenuBar1.add(mnuEdit);
-
         mnuHelp.setText("Ajuda");
 
         mnuHelpSupport.setText("Suporte");
@@ -570,9 +557,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lblViewStatus;
     private javax.swing.JLabel lblViewType;
     private javax.swing.JMenuItem mnuAdd;
-    private javax.swing.JMenu mnuEdit;
-    private javax.swing.JMenuItem mnuEditFind;
-    private javax.swing.JMenuItem mnuEditReplace;
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenu mnuHelp;
