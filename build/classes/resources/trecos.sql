@@ -4,11 +4,11 @@ DROP TABLE IF EXISTS trecos;
 -- Cria a tabela no banco de dados
 CREATE TABLE "trecos" (
 	"t_id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	"t_date"	TEXT NOT NULL,
+	"t_date"	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	"t_type"	TEXT NOT NULL,
 	"t_name"	TEXT NOT NULL,
 	"t_description"	TEXT NOT NULL,
-	"t_status"	TEXT NOT NULL
+	"t_status"	TEXT NOT NULL DEFAULT 'on'
 );
 
 -- Insere alguns dados "fake" para testes

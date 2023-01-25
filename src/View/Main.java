@@ -16,6 +16,7 @@ import javax.swing.table.JTableHeader;
  */
 import Control.PopUps;
 import Model.DbConnection;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,6 +73,18 @@ public class Main extends javax.swing.JFrame {
 
         // Chama método que lista dados dentro da tabela
         readAll();
+
+        // Obtém a cor de fundo do painel que contém os campos "view"
+        int bgColor = panelRead.getBackground().getRGB();
+
+        // Define a cor de fundo dos campos com a cor de fundo do painel que os contém
+        txtViewId.setBackground(new Color(bgColor));
+        txtViewStatus.setBackground(new Color(bgColor));
+        txtViewDate.setBackground(new Color(bgColor));
+        txtViewType.setBackground(new Color(bgColor));
+        txtViewName.setBackground(new Color(bgColor));
+        txtViewDescription.setBackground(new Color(bgColor));
+
     }
 
     /**
@@ -130,8 +143,8 @@ public class Main extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         btnAddListAll = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtAddType = new javax.swing.JTextField();
+        txtAddName = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtAddDescription = new javax.swing.JTextArea();
@@ -139,6 +152,7 @@ public class Main extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         btnAddSave = new javax.swing.JButton();
         btnAddReset = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuListAll = new javax.swing.JMenuItem();
@@ -197,6 +211,7 @@ public class Main extends javax.swing.JFrame {
             tableListAll.getColumnModel().getColumn(0).setMinWidth(30);
             tableListAll.getColumnModel().getColumn(0).setPreferredWidth(50);
             tableListAll.getColumnModel().getColumn(0).setMaxWidth(100);
+            tableListAll.getColumnModel().getColumn(1).setPreferredWidth(200);
             tableListAll.getColumnModel().getColumn(2).setMinWidth(50);
             tableListAll.getColumnModel().getColumn(2).setPreferredWidth(350);
             tableListAll.getColumnModel().getColumn(2).setMaxWidth(600);
@@ -436,6 +451,8 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setBorder(null);
+
         txtViewDescription.setEditable(false);
         txtViewDescription.setColumns(20);
         txtViewDescription.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -447,11 +464,12 @@ public class Main extends javax.swing.JFrame {
 
         txtViewId.setEditable(false);
         txtViewId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtViewId.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtViewId.setBorder(null);
 
         txtViewStatus.setEditable(false);
         txtViewStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtViewStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtViewStatus.setBorder(null);
         txtViewStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtViewStatusActionPerformed(evt);
@@ -460,6 +478,7 @@ public class Main extends javax.swing.JFrame {
 
         txtViewDate.setEditable(false);
         txtViewDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewDate.setBorder(null);
         txtViewDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtViewDateActionPerformed(evt);
@@ -468,9 +487,11 @@ public class Main extends javax.swing.JFrame {
 
         txtViewType.setEditable(false);
         txtViewType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewType.setBorder(null);
 
         txtViewName.setEditable(false);
         txtViewName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtViewName.setBorder(null);
         txtViewName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtViewNameActionPerformed(evt);
@@ -553,7 +574,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(panelReadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnViewEdit)
                     .addComponent(btnViewDelete))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
         pnlMainCards.add(panelRead, "cardView");
@@ -571,17 +592,17 @@ public class Main extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Todos os campos devem ser preenchidos.");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtAddType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtAddType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtAddTypeActionPerformed(evt);
             }
         });
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        txtAddName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtAddName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txtAddNameActionPerformed(evt);
             }
         });
 
@@ -590,7 +611,10 @@ public class Main extends javax.swing.JFrame {
         jLabel13.setText("Descrição:");
 
         txtAddDescription.setColumns(20);
+        txtAddDescription.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtAddDescription.setLineWrap(true);
         txtAddDescription.setRows(5);
+        txtAddDescription.setWrapStyleWord(true);
         jScrollPane4.setViewportView(txtAddDescription);
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -602,8 +626,22 @@ public class Main extends javax.swing.JFrame {
         jLabel15.setText("Tipo:");
 
         btnAddSave.setText("Salvar");
+        btnAddSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddSaveActionPerformed(evt);
+            }
+        });
 
         btnAddReset.setText("Limpar");
+        btnAddReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddResetActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 8)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Campos ID, Data e Status são preenchidos automaticamente pelo sistema.");
 
         javax.swing.GroupLayout panelInsertLayout = new javax.swing.GroupLayout(panelInsert);
         panelInsert.setLayout(panelInsertLayout);
@@ -632,10 +670,13 @@ public class Main extends javax.swing.JFrame {
                                 .addComponent(btnAddSave)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAddReset))
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                            .addComponent(txtAddName, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                            .addComponent(txtAddType, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInsertLayout.createSequentialGroup()
+                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         panelInsertLayout.setVerticalGroup(
             panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -646,13 +687,15 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(btnAddListAll))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAddType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAddName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -662,7 +705,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(panelInsertLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddSave)
                     .addComponent(btnAddReset))
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
 
         pnlMainCards.add(panelInsert, "cardInsert");
@@ -727,18 +770,21 @@ public class Main extends javax.swing.JFrame {
 
     private void mnuListAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuListAllActionPerformed
 
-        // Exibir o painel "card1"
+        // Exibir o card "cardReadAll"
         openCard("cardReadAll");
 
     }//GEN-LAST:event_mnuListAllActionPerformed
 
     private void mnuAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAddActionPerformed
+
+        // Exibir o card "cardInsert"
         openCard("cardInsert");
+
     }//GEN-LAST:event_mnuAddActionPerformed
 
     private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
 
-        // Fecha o aplicativo usando poupu de confirmação
+        // Fecha o aplicativo usando popup de confirmação
         exitApp();
 
     }//GEN-LAST:event_mnuExitActionPerformed
@@ -748,17 +794,24 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+
+        // Obtém o registro selecionado na tabela e o exibe → view
         loadSelected("view");
+
     }//GEN-LAST:event_btnViewActionPerformed
 
     private void btnListAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListAllActionPerformed
-        // Mostra o card que lista todos os registros
+
+        // Exibir o card "cardReadAll"
         openCard("cardReadAll");
+
     }//GEN-LAST:event_btnListAllActionPerformed
 
     private void btnViewDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDeleteActionPerformed
+
         // Converte o Id do campo para inteiro e chama o método para apagar
         deleteData(Integer.parseInt(txtViewId.getText()));
+
     }//GEN-LAST:event_btnViewDeleteActionPerformed
 
     private void txtViewStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtViewStatusActionPerformed
@@ -774,8 +827,10 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtViewNameActionPerformed
 
     private void btnViewEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewEditActionPerformed
-        //Carrega os dados do banco e dados, chamando em seguida o método de edição
+
+        // Obtém o registro selecionado na tabela e o edita → edit
         loadSelected("edit");
+
     }//GEN-LAST:event_btnViewEditActionPerformed
 
     private void txtEditStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEditStatusActionPerformed
@@ -783,31 +838,53 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEditStatusActionPerformed
 
     private void btnEditReset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditReset1ActionPerformed
-        // Mostra o card que lista todos os registros
+
+        // Exibir o card "cardReadAll"
         openCard("cardReadAll");
+
     }//GEN-LAST:event_btnEditReset1ActionPerformed
 
     private void btnEditResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditResetActionPerformed
-        //Carrega os dados do banco e dados, chamando em seguida o método de edição
+
+        // Obtém o registro selecionado na tabela e o edita → edit
         loadSelected("edit");
+
     }//GEN-LAST:event_btnEditResetActionPerformed
 
     private void btnEditSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditSaveActionPerformed
-        // Executa método que atualiza o banco de dados
+
+        // Atualiza o registro selecionado no banco de dados
         updateData();
+
     }//GEN-LAST:event_btnEditSaveActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txtAddTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddTypeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txtAddTypeActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void txtAddNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_txtAddNameActionPerformed
 
     private void btnAddListAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddListAllActionPerformed
+
+        // Exibir o card "cardReadAll"
         openCard("cardReadAll");
+
     }//GEN-LAST:event_btnAddListAllActionPerformed
+
+    private void btnAddResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddResetActionPerformed
+
+        // Limpa todos campos do formulário
+        formAddClear();
+    }//GEN-LAST:event_btnAddResetActionPerformed
+
+    private void btnAddSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSaveActionPerformed
+
+        // Salva o novo registro no banco de dados
+        formAddSave();
+
+    }//GEN-LAST:event_btnAddSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -835,6 +912,7 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -852,6 +930,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -868,8 +947,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JLabel lblViewDate;
     private javax.swing.JLabel lblViewDescription;
     private javax.swing.JLabel lblViewId;
@@ -891,6 +968,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel pnlMainCards;
     private javax.swing.JTable tableListAll;
     private javax.swing.JTextArea txtAddDescription;
+    private javax.swing.JTextField txtAddName;
+    private javax.swing.JTextField txtAddType;
     private javax.swing.JTextField txtEditDate;
     private javax.swing.JTextArea txtEditDescription;
     private javax.swing.JTextField txtEditId;
@@ -907,40 +986,44 @@ public class Main extends javax.swing.JFrame {
 
     // Abre um card 
     public void openCard(String cardName) {
-        // Códigos para exibir o painel "card1"
+
+        // Códigos para selecionar e exibir o card solicitado
+        // Um card é selecionado pelo atributo "cardName" deste
         CardLayout card = (CardLayout) pnlMainCards.getLayout();
         card.show(pnlMainCards, cardName);
+
     }
 
     // Lê todos os registros válidos e popula a tabela
     private void readAll() {
+
         try {
 
             // Acessa a tabela e o model (dados) dela
             DefaultTableModel tableModel = (DefaultTableModel) tableListAll.getModel();
 
-            // Remove as linhas "default" da tabela, se necessário
+            // Apaga todas as linhas da tabela para que sejam criadas novamente
             tableModel.setNumRows(0);
 
             // Faz conexão com o banco de dados
             conn = dbConnection.dbConnect();
 
-            // SQL de consulta ao banco de dados
+            // SQL → Selecione todos os registros da tabela trecos, exceto se status = 'del'
             String sql = "SELECT t_id, t_date, t_name, t_status FROM trecos WHERE t_status != 'del'";
 
             // Prepara, filtra e sanitiza o SQL antes de executar
             pstm = conn.prepareStatement(sql);
 
-            // Executa query e armazena no "Resultset"
+            // Executa query e armazena no "Resultset" → res
             res = pstm.executeQuery();
 
             // Loop para receber os dados de cada linha do resultado
             while (res.next()) {
 
-                // Adiciona e exibe dados em uma linha da tabela
+                // Adiciona e exibe dados do registro atual em uma nova linha da tabela
                 tableModel.addRow(new Object[]{
                     res.getInt("t_id"),
-                    res.getDate("t_date"),
+                    res.getString("t_date"),
                     res.getString("t_name"),
                     res.getString("t_status")
                 });
@@ -948,11 +1031,15 @@ public class Main extends javax.swing.JFrame {
             }
 
         } catch (SQLException error) {
+
             // Se ocorrer erro de SQL, exibe no popup
             PopUps.showError("Main.readAll\n" + error);
+
         } finally {
+
             // Fecha conexões e recursos abertos
             dbConnection.dbClose(conn, pstm, res);
+
         }
     }
 
@@ -960,36 +1047,37 @@ public class Main extends javax.swing.JFrame {
     private void loadSelected(String action) {
         try {
 
-            // Obtém a linha selecionada na tabela
+            // Obtém o número da linha selecionada na tabela
             int selected = tableListAll.getSelectedRow();
 
-            // Se nada foi selecionado ao clicar em um botão...
+            // Se nada foi selecionado ao clicar...
             if (selected < 0) {
-                // Mostre uma mensagem de erro
+
+                // Mostra uma mensagem de erro
                 PopUps.showAlert("Selecione um item primeiro.");
 
                 // Se selecionou uma linha...
             } else {
 
-                // Obtém o valor do Id da linha selecionada
+                // Obtém o valor da coluna Id (índice 0) da linha selecionada
                 int selectedId = (int) tableListAll.getModel().getValueAt(selected, 0);
 
-                // SQL que obtém o registro à partir do ID
+                // SQL → Selecione o registro à partir do ID, exceto com status = 'del'
                 String sql = "SELECT * FROM trecos WHERE t_id = ? AND t_status != 'del'";
 
                 // Conexão com o banco de dados
                 conn = dbConnection.dbConnect();
 
-                // Preparar a query
+                // Prepara, filtra e sanitiza o SQL antes de executar
                 pstm = conn.prepareStatement(sql);
 
-                // Substitui valores variáveis no SQL
+                // Substitui o "?" na query pelo Id do registro
                 pstm.setInt(1, selectedId);
 
-                // Executa a query e armazena resultado(s)
+                // Executa a query e armazena resultado(s) em res
                 res = pstm.executeQuery();
 
-                // Carrega o método correto de acordo com a ação escolhida
+                // Carrega o método correto de acordo com a ação escolhida → action
                 switch (action) {
                     case "view" ->
                         viewData(res);
@@ -1002,11 +1090,15 @@ public class Main extends javax.swing.JFrame {
             }
 
         } catch (SQLException error) {
+
             // Se ocorrer erro de SQL, exibe no popup
             PopUps.showError("Main.loadSelected\n" + error);
+
         } finally {
+
             // Fecha conexões e recursos abertos      
             dbConnection.dbClose(conn, pstm, res);
+
         }
     }
 
@@ -1017,23 +1109,36 @@ public class Main extends javax.swing.JFrame {
             /// Recebe o registro do banco de dados
             res.next();
 
-            // Exibe nos campos dor formulário de visualização
+            // Define a cor do status conforme o valor
+            Color fgColor = new Color(51, 152, 51); // Verde escuro
+            String status = res.getString("t_status");
+            if (status.equals("on")) {
+                txtViewStatus.setForeground(fgColor);
+            } else {
+                txtViewStatus.setForeground(Color.RED);
+            }
+
+            // Exibe nos campos do formulário de visualização
             txtViewId.setText(res.getString("t_id"));
             txtViewDate.setText(res.getString("t_date"));
             txtViewType.setText(res.getString("t_type"));
             txtViewName.setText(res.getString("t_name"));
-            txtViewStatus.setText(res.getString("t_status"));
+            txtViewStatus.setText(status);
             txtViewDescription.setText(res.getString("t_description"));
 
             // Mostra o card com os dados do registro
             openCard("cardView");
 
         } catch (SQLException error) {
+
             // Se ocorrer erro de SQL, exibe no popup
             PopUps.showError("Main.viewData\n" + error);
+
         } finally {
+
             // Fecha conexões e recursos abertos      
             dbConnection.dbClose(null, null, res);
+
         }
     }
 
@@ -1045,27 +1150,40 @@ public class Main extends javax.swing.JFrame {
             /// Recebe o registro do banco de dados
             res.next();
 
-            // Exibe nos campos dor formulário de visualização
+            // Exibe nos campos do formulário de visualização
             txtEditId.setText(res.getString("t_id"));
             txtEditDate.setText(res.getString("t_date"));
             txtEditType.setText(res.getString("t_type"));
             txtEditName.setText(res.getString("t_name"));
             txtEditDescription.setText(res.getString("t_description"));
 
-            // Se o satus = "on" marca o checkbox
+            // Se o satus = "on"...
             if (res.getString("t_status").equals("on")) {
+
+                // Seleciona o checkbox
                 txtEditStatus.setSelected(true);
+
+                // Se o status é "off"...
+            } else {
+
+                // Não seleciona o checkbox
+                txtEditStatus.setSelected(false);
+
             }
 
             // Mostra o card com os dados do registro
             openCard("cardEdit");
 
         } catch (SQLException error) {
+
             // Se ocorrer erro de SQL, exibe no popup
             PopUps.showError("Main.editData\n" + error);
+
         } finally {
+
             // Fecha conexões e recursos abertos      
             dbConnection.dbClose(null, null, res);
+
         }
 
     }
@@ -1076,21 +1194,21 @@ public class Main extends javax.swing.JFrame {
         // Cria caixa de diálogo popup para confirmação
         int dialogButton = PopUps.showConfirm("Oooops!", "Tem certeza que deseja apagar o registro?");
 
-        // Se clicou em Sim
+        // Se clicou em [Sim]
         if (dialogButton == 0) {
 
             try {
 
-                // Query que altera o status do registro para apagado
+                // SQL → Atualiza a tabela trecos com o campos status = 'del'
                 String sql = "UPDATE trecos SET t_status = 'del' WHERE t_id = ?";
 
                 // Conexão com o banco de dados
                 conn = dbConnection.dbConnect();
 
-                // Preparar a query
+                // Prepara, filtra e sanitiza o SQL antes de executar
                 pstm = conn.prepareStatement(sql);
 
-                // Substitui valores variáveis no SQL
+                // Substitui "?" pelo id do registro
                 pstm.setInt(1, dataId);
 
                 // Executa a query
@@ -1103,11 +1221,15 @@ public class Main extends javax.swing.JFrame {
                 openCard("cardReadAll");
 
             } catch (SQLException error) {
+
                 // Se ocorrer erro de SQL, exibe no popup
                 PopUps.showError("Main.deleteData\n" + error);
+
             } finally {
+
                 // Fecha conexões e recursos abertos      
                 dbConnection.dbClose(conn, pstm, null);
+
             }
 
         }
@@ -1125,7 +1247,7 @@ public class Main extends javax.swing.JFrame {
 
             try {
 
-                // Query que altera o status do registro para apagado
+                // Atualiza a tabela trecos com os valores dos campos
                 String sql = "UPDATE trecos SET t_date = ?, t_type = ?, t_name = ?, t_description = ?, t_status = ? WHERE t_id = ?";
 
                 // Conexão com o banco de dados
@@ -1134,7 +1256,7 @@ public class Main extends javax.swing.JFrame {
                 // Preparar a query
                 pstm = conn.prepareStatement(sql);
 
-                // Substitui valores variáveis no SQL
+                // Substitui os "?" no SQL pelos valores corretos
                 pstm.setString(6, txtEditId.getText());
                 pstm.setString(1, txtEditDate.getText());
                 pstm.setString(2, txtEditType.getText());
@@ -1158,15 +1280,17 @@ public class Main extends javax.swing.JFrame {
                 openCard("cardReadAll");
 
             } catch (SQLException error) {
+
                 // Se ocorrer erro de SQL, exibe no popup
                 PopUps.showError("Main.deleteData\n" + error);
+
             } finally {
+
                 // Fecha conexões e recursos abertos      
                 dbConnection.dbClose(conn, pstm, null);
+
             }
-
         }
-
     }
 
     // Fecha o aplicativo com um popup de confirmação
@@ -1180,6 +1304,56 @@ public class Main extends javax.swing.JFrame {
 
             // Fecha aplicativo
             System.exit(0);
+
+        }
+    }
+
+    // Apaga todos os campos do formulário de cadastro
+    public void formAddClear() {
+
+        txtAddType.setText("");
+        txtAddName.setText("");
+        txtAddDescription.setText("");
+
+    }
+
+    // Cria um novo registro no banco de dados
+    public void formAddSave() {
+
+        try {
+
+            // SQL → Insere um novo registro
+            String sql = "INSERT INTO trecos (t_type, t_name, t_description) VALUES (?, ?, ?)";
+
+            // Conexão com o banco de dados
+            conn = dbConnection.dbConnect();
+
+            // Preparar a query
+            pstm = conn.prepareStatement(sql);
+
+            // Substitui os "?" no SQL pelos valores corretos
+            pstm.setString(1, txtAddType.getText());
+            pstm.setString(2, txtAddName.getText());
+            pstm.setString(3, txtAddDescription.getText());
+
+            // Executa a query
+            pstm.executeUpdate();
+
+            // Atualiza a listagem de registros
+            readAll();
+
+            // Mostra a listagem de registros
+            openCard("cardReadAll");
+
+        } catch (SQLException error) {
+
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("Main.deleteData\n" + error);
+
+        } finally {
+
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(conn, pstm, null);
 
         }
     }
