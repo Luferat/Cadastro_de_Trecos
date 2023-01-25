@@ -201,7 +201,6 @@ public class Main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableListAll.setColumnSelectionAllowed(true);
         tableListAll.setMinimumSize(new java.awt.Dimension(100, 100));
         tableListAll.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tableListAll.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -898,7 +897,7 @@ public class Main extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Metal".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
