@@ -28,14 +28,6 @@ import java.sql.SQLException;
  */
 public class Main extends javax.swing.JFrame {
 
-    // Faz conexão DAO
-    private DbConnection dbConnection = new DbConnection();
-
-    // Inicializa atributos DAO
-    private Connection conn = null;
-    private PreparedStatement pstm = null;
-    private ResultSet res = null;
-
     /**
      * Creates new form Main
      */
@@ -94,7 +86,7 @@ public class Main extends javax.swing.JFrame {
         panelUpdate = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        panelForm1 = new View.panelForm();
+        panelEditForm = new View.panelForm();
         panelRead = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -107,13 +99,10 @@ public class Main extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        mnuFile = new javax.swing.JMenu();
-        mnuFilePanel1 = new javax.swing.JMenuItem();
-        mnuFilePanel2 = new javax.swing.JMenuItem();
-        mnuFilePanel3 = new javax.swing.JMenuItem();
         mnuEdit = new javax.swing.JMenu();
         mnuEditFind = new javax.swing.JMenuItem();
         mnuEditReplace = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpSupport = new javax.swing.JMenuItem();
         mnuHelpUpdates = new javax.swing.JMenuItem();
@@ -208,7 +197,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlMainCards.add(panelReadAll, "card1");
+        pnlMainCards.add(panelReadAll, "cardViewAll");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel1.setText("Editar Treco");
@@ -227,7 +216,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(panelUpdateLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelForm1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelEditForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelUpdateLayout.setVerticalGroup(
@@ -238,11 +227,11 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelForm1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                .addComponent(panelEditForm, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        pnlMainCards.add(panelUpdate, "card2");
+        pnlMainCards.add(panelUpdate, "cardEditData");
 
         jLabel3.setText("jLabel3");
 
@@ -315,43 +304,23 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(201, Short.MAX_VALUE))
         );
 
-        pnlMainCards.add(panelRead, "card3");
-
-        mnuFile.setText("Arquivo");
-
-        mnuFilePanel1.setText("Abre Painel 1");
-        mnuFilePanel1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuFilePanel1ActionPerformed(evt);
-            }
-        });
-        mnuFile.add(mnuFilePanel1);
-
-        mnuFilePanel2.setText("Abre Painel 2");
-        mnuFilePanel2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuFilePanel2ActionPerformed(evt);
-            }
-        });
-        mnuFile.add(mnuFilePanel2);
-
-        mnuFilePanel3.setText("Abre Painel 3");
-        mnuFilePanel3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuFilePanel3ActionPerformed(evt);
-            }
-        });
-        mnuFile.add(mnuFilePanel3);
-
-        jMenuBar1.add(mnuFile);
+        pnlMainCards.add(panelRead, "cardViewData");
 
         mnuEdit.setText("Editar");
 
         mnuEditFind.setText("Procurar");
+        mnuEditFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuEditFindActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuEditFind);
 
         mnuEditReplace.setText("Substituir");
         mnuEdit.add(mnuEditReplace);
+
+        jMenuItem1.setText("Sair");
+        mnuEdit.add(jMenuItem1);
 
         jMenuBar1.add(mnuEdit);
 
@@ -385,27 +354,6 @@ public class Main extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mnuFilePanel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel1ActionPerformed
-
-        // Exibir o painel "card1"
-        openCard("card1");
-
-    }//GEN-LAST:event_mnuFilePanel1ActionPerformed
-
-    private void mnuFilePanel2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel2ActionPerformed
-
-        // Exibir o painel "card1"
-        openCard("card2");
-
-    }//GEN-LAST:event_mnuFilePanel2ActionPerformed
-
-    private void mnuFilePanel3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePanel3ActionPerformed
-
-        // Exibir o painel "card1"
-        openCard("card3");
-
-    }//GEN-LAST:event_mnuFilePanel3ActionPerformed
-
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         loadSelected("edit");
     }//GEN-LAST:event_btnEditActionPerformed
@@ -417,6 +365,10 @@ public class Main extends javax.swing.JFrame {
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
         loadSelected("view");
     }//GEN-LAST:event_btnViewActionPerformed
+
+    private void mnuEditFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEditFindActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuEditFindActionPerformed
 
     /**
      * @param args the command line arguments
@@ -462,26 +414,31 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelViewName;
     private javax.swing.JMenu mnuEdit;
     private javax.swing.JMenuItem mnuEditFind;
     private javax.swing.JMenuItem mnuEditReplace;
-    private javax.swing.JMenu mnuFile;
-    private javax.swing.JMenuItem mnuFilePanel1;
-    private javax.swing.JMenuItem mnuFilePanel2;
-    private javax.swing.JMenuItem mnuFilePanel3;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpSite;
     private javax.swing.JMenuItem mnuHelpSupport;
     private javax.swing.JMenuItem mnuHelpUpdates;
-    private View.panelForm panelForm1;
+    private View.panelForm panelEditForm;
     private javax.swing.JPanel panelRead;
     private javax.swing.JPanel panelReadAll;
     private javax.swing.JPanel panelUpdate;
     private javax.swing.JPanel pnlMainCards;
     private javax.swing.JTable tableListAll;
     // End of variables declaration//GEN-END:variables
+
+    // Faz conexão DAO
+    private DbConnection dbConnection = new DbConnection();
+
+    // Inicializa atributos DAO
+    private Connection conn = null;
+    private PreparedStatement pstm = null;
+    private ResultSet res = null;
 
     // Abre um card 
     public void openCard(String cardName) {
@@ -506,11 +463,11 @@ public class Main extends javax.swing.JFrame {
             // Remove as linhas "default" da tabela, se necessário
             tableModel.setNumRows(0);
 
+            // SQL de consulta ao banco de dados
+            String sql = "SELECT trecoid, trecodate, treconame, trecostatus FROM trecos WHERE trecostatus != 'del'";
+
             // Faz conexão com o banco de dados
             conn = dbConnection.dbConnect();
-
-            // SQL de consulta ao banco de dados
-            String sql = "SELECT t_id, t_date, t_name, t_status FROM trecos WHERE t_status != 'del'";
 
             // Prepara, filtra e sanitiza o SQL antes de executar
             pstm = conn.prepareStatement(sql);
@@ -523,10 +480,10 @@ public class Main extends javax.swing.JFrame {
 
                 // Adiciona e exibe dados em uma linha da tabela
                 tableModel.addRow(new Object[]{
-                    res.getInt("t_id"),
-                    res.getDate("t_date"),
-                    res.getString("t_name"),
-                    res.getString("t_status")
+                    res.getInt("trecoid"),
+                    res.getDate("trecodate"),
+                    res.getString("treconame"),
+                    res.getString("trecostatus")
                 });
 
             }
@@ -541,6 +498,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void loadSelected(String action) {
+
         try {
 
             // Obtém a linha selecionada na tabela
@@ -558,7 +516,7 @@ public class Main extends javax.swing.JFrame {
                 int selectedId = (int) tableListAll.getModel().getValueAt(selected, 0);
 
                 // SQL que obtém o registro à partir do ID
-                String sql = "SELECT * FROM trecos WHERE t_id = ? AND t_status != 'del'";
+                String sql = "SELECT * FROM trecos WHERE trecoid = ? AND trecostatus != 'del'";
 
                 // Conexão com o banco de dados
                 conn = dbConnection.dbConnect();
@@ -585,7 +543,7 @@ public class Main extends javax.swing.JFrame {
 
         } catch (SQLException error) {
             // Se ocorrer erro de SQL, exibe no popup
-            PopUps.showError("" + error);
+            PopUps.showError("Main.loadSelected\n" + error);
         } finally {
             // Fecha conexões e recursos abertos      
             dbConnection.dbClose(conn, pstm, res);
@@ -596,15 +554,19 @@ public class Main extends javax.swing.JFrame {
     private void viewData(ResultSet res) {
         try {
             res.next();
-            labelViewId.setText(res.getString("t_id"));
-            labelViewDate.setText(res.getString("t_date"));
-            labelViewType.setText(res.getString("t_type"));
-            labelViewName.setText(res.getString("t_name"));
-            labelViewStatus.setText(res.getString("t_status"));
-            labelViewDescription.setText(res.getString("t_description"));
+//            labelViewId.setText(res.getString("trecoid"));
+//            labelViewDate.setText(res.getString("trecodate"));
+//            labelViewType.setText(res.getString("trecotype"));
+            labelViewName.setText(res.getString("treconame"));
+//            labelViewStatus.setText(res.getString("trecostatus"));
+//            labelViewDescription.setText(res.getString("trecodescription"));
+
+            // Abre Card para visualizar registro
+            openCard("cardViewData");
+
         } catch (SQLException error) {
             // Se ocorrer erro de SQL, exibe no popup
-            PopUps.showError("" + error);
+            PopUps.showError("Main.viewData\n" + error);
         } finally {
             // Fecha conexões e recursos abertos      
             dbConnection.dbClose(res);
@@ -613,7 +575,30 @@ public class Main extends javax.swing.JFrame {
 
     // Edita dados do registro
     private void editData(ResultSet res) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        try {
+
+            res.next();
+            if (res.getString("trecostatus").equals("on")) {
+                panelEditForm.checkboxStatus.setSelected(true);
+            }
+            panelEditForm.txtId.setText(res.getString("trecoid"));
+            panelEditForm.txtTrecoDate.setText(res.getString("trecodate"));
+            panelEditForm.txtName.setText(res.getString("treconame"));
+            panelEditForm.comboTrecoType.setSelectedIndex(res.getInt("trecotype"));
+            panelEditForm.txtTrecoDescrition.setText(res.getString("trecodescription"));
+
+            // Abre Card para visualizar registro
+            openCard("cardEditData");
+
+        } catch (SQLException error) {
+            // Se ocorrer erro de SQL, exibe no popup
+            PopUps.showError("Main.editData\n" + error);
+        } finally {
+            // Fecha conexões e recursos abertos      
+            dbConnection.dbClose(res);
+        }
+
     }
 
 }

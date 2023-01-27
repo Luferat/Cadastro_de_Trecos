@@ -4,21 +4,6 @@ import javax.swing.JOptionPane;
 
 public class PopUps {
 
-    public static void showError(Exception error) {
-
-        // Exibe caixa de diálogo com mensagem de erro        
-        JOptionPane.showMessageDialog(
-                null,
-                "Ocorreram erros: \n\n" + error,
-                "Oooops!",
-                JOptionPane.ERROR_MESSAGE
-        );
-
-        // Encerra o aplicativo
-        System.exit(0);
-
-    }
-
     public static void showError(String error) {
         // Exibe caixa de diálogo com mensagem de erro        
         JOptionPane.showMessageDialog(

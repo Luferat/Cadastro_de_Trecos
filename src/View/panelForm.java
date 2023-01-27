@@ -4,6 +4,13 @@
  */
 package View;
 
+import Model.DbConnection;
+import Control.ComboItem;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author andre.ataide
@@ -15,6 +22,7 @@ public class panelForm extends javax.swing.JPanel {
      */
     public panelForm() {
         initComponents();
+        loadComboTypesValues();
     }
 
     /**
@@ -31,14 +39,16 @@ public class panelForm extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        txtTrecoName = new javax.swing.JTextField();
-        txtTrecoId = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
         comboTrecoType = new javax.swing.JComboBox<>();
         txtTrecoDate = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtTrecoDescrition = new javax.swing.JTextPane();
         btnSave = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        checkboxStatus = new javax.swing.JCheckBox();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtTrecoDescrition = new javax.swing.JTextArea();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("ID:");
@@ -55,12 +65,13 @@ public class panelForm extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Descrição:");
 
-        txtTrecoName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        txtTrecoId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtId.setEditable(false);
+        txtId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         comboTrecoType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        comboTrecoType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboTrecoType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "- - Selecione - -" }));
         comboTrecoType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboTrecoTypeActionPerformed(evt);
@@ -68,9 +79,6 @@ public class panelForm extends javax.swing.JPanel {
         });
 
         txtTrecoDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        txtTrecoDescrition.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jScrollPane1.setViewportView(txtTrecoDescrition);
 
         btnSave.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnSave.setText("Salvar");
@@ -82,6 +90,18 @@ public class panelForm extends javax.swing.JPanel {
                 btnResetActionPerformed(evt);
             }
         });
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setText("Status:");
+
+        checkboxStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        checkboxStatus.setText("Ativo");
+
+        txtTrecoDescrition.setColumns(20);
+        txtTrecoDescrition.setLineWrap(true);
+        txtTrecoDescrition.setRows(5);
+        txtTrecoDescrition.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(txtTrecoDescrition);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -101,11 +121,16 @@ public class panelForm extends javax.swing.JPanel {
                         .addComponent(btnSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                         .addComponent(btnReset))
-                    .addComponent(jScrollPane1)
-                    .addComponent(txtTrecoName)
-                    .addComponent(txtTrecoId, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtName)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(checkboxStatus))
                     .addComponent(comboTrecoType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtTrecoDate))
+                    .addComponent(txtTrecoDate)
+                    .addComponent(jScrollPane2))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -114,7 +139,9 @@ public class panelForm extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtTrecoId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(checkboxStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTrecoDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -125,12 +152,12 @@ public class panelForm extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTrecoName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSave)
@@ -151,16 +178,56 @@ public class panelForm extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox<String> comboTrecoType;
+    public javax.swing.JCheckBox checkboxStatus;
+    public javax.swing.JComboBox<String> comboTrecoType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField txtTrecoDate;
-    private javax.swing.JTextPane txtTrecoDescrition;
-    private javax.swing.JTextField txtTrecoId;
-    private javax.swing.JTextField txtTrecoName;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JTextField txtId;
+    public javax.swing.JTextField txtName;
+    public javax.swing.JTextField txtTrecoDate;
+    public javax.swing.JTextArea txtTrecoDescrition;
     // End of variables declaration//GEN-END:variables
+
+    // Faz conexão DAO
+    private DbConnection dbConnection = new DbConnection();
+
+    // Inicializa atributos DAO
+    private Connection conn = null;
+    private PreparedStatement pstm = null;
+    private ResultSet res = null;
+
+    public void loadComboTypesValues() {
+
+        try {
+
+            // SQL de consulta ao banco de dados
+            String sql = "SELECT * FROM tipos ORDER BY tipoid";
+
+            // Faz conexão com o banco de dados
+            conn = dbConnection.dbConnect();
+
+            // Prepara, filtra e sanitiza o SQL antes de executar
+            pstm = conn.prepareStatement(sql);
+
+            // Executa query e armazena no "Resultset"
+            res = pstm.executeQuery();
+
+            // Loop para receber os dados de cada linha do resultado
+            while (res.next()) {
+
+                // Adiciona cada item na lista do combo
+                comboTrecoType.addItem(res.getString("tiponame"));
+            }
+
+        } catch (SQLException e) {
+
+        }
+
+    }
+
 }

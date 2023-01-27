@@ -15,7 +15,7 @@ public class DbConnection {
     // String de conexão com o banco de dados SQLite
     //                                    tipo   caminho    database
     //                                     ↓      ↓          ↓ 
-    private final String SQLITEURL = "jdbc:sqlite:src/resources/trecos.db";
+    private final String SQLITEURL = "jdbc:sqlite:src/Db/trecos.db";
 
     // String de conexão com o banco de dados MySQL
     //                                   tipo    servidor  porta database   usuário       senha
@@ -34,7 +34,7 @@ public class DbConnection {
             // Inicia a conexão usando a URL
             conn = DriverManager.getConnection(SQLITEURL);
         } catch (SQLException error) {
-            PopUps.showError(error);
+            PopUps.showError("DbConnection.dbConnect\n" + error);
         }
 
         // Retorna a conexão estabelecida
@@ -90,10 +90,10 @@ public class DbConnection {
 
             // Exibir os dados
             while (res.next()) {
-                System.out.println("ID: " + res.getInt("t_id"));
-                System.out.println("  Data: " + res.getString("t_date"));
-                System.out.println("  Nome: " + res.getString("t_name"));
-                System.out.println("  Status: " + res.getString("t_status"));
+                System.out.println("ID: " + res.getInt("trecoid"));
+                System.out.println("  Data: " + res.getString("trecodate"));
+                System.out.println("  Nome: " + res.getString("treconame"));
+                System.out.println("  Status: " + res.getString("trecostatus"));
                 System.out.println("--------------------");
             }
 
@@ -102,7 +102,7 @@ public class DbConnection {
 
         } catch (SQLException error) {
             // Exibe mensagem de erro
-            PopUps.showError(error);
+            PopUps.showError("DbConnection.main\n\n" + error);
         }
 
     }

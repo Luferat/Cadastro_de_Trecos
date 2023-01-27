@@ -4,37 +4,6 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="mnuFile">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Arquivo"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuFilePanel1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Abre Painel 1"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuFilePanel1ActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuFilePanel2">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Abre Painel 2"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuFilePanel2ActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuFilePanel3">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Abre Painel 3"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuFilePanel3ActionPerformed"/>
-              </Events>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
         <Menu class="javax.swing.JMenu" name="mnuEdit">
           <Properties>
             <Property name="text" type="java.lang.String" value="Editar"/>
@@ -44,10 +13,18 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Procurar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuEditFindActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuEditReplace">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Substituir"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Sair"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -123,7 +100,7 @@
         <Container class="javax.swing.JPanel" name="panelReadAll">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="card1"/>
+              <CardConstraints cardName="cardViewAll"/>
             </Constraint>
           </Constraints>
 
@@ -254,7 +231,7 @@
         <Container class="javax.swing.JPanel" name="panelUpdate">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="card2"/>
+              <CardConstraints cardName="cardEditData"/>
             </Constraint>
           </Constraints>
 
@@ -269,7 +246,7 @@
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="panelForm1" max="32767" attributes="0"/>
+                          <Component id="panelEditForm" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -283,7 +260,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panelForm1" pref="350" max="32767" attributes="0"/>
+                      <Component id="panelEditForm" pref="350" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -304,14 +281,14 @@
                 <Property name="text" type="java.lang.String" value="Altere apenas os dados necess&#xe1;rios mantendo os outros intactos."/>
               </Properties>
             </Component>
-            <Component class="View.panelForm" name="panelForm1">
+            <Component class="View.panelForm" name="panelEditForm">
             </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="panelRead">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="card3"/>
+              <CardConstraints cardName="cardViewData"/>
             </Constraint>
           </Constraints>
 
